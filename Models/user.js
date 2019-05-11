@@ -33,10 +33,13 @@ let UsersSchame = mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId , 
         ref: 'branche',
         required: true
-    }, 
-    role : {
-        type : String , 
-        require : true 
+    },
+    role: {
+        type: String,
+        require: true
+    },
+    resetToken: {
+        type: String,
     }, 
     created_at: {type: Date, default: Date.now},
     updated_at: {type: Date, default: Date.now}
@@ -46,6 +49,7 @@ let UsersSchame = mongoose.Schema({
 UsersSchame.methods.toJSON = function(){
     let obj = this.toObject() 
     delete obj.password 
+    delete obj.resetToken 
     return obj
 }
 

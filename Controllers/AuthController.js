@@ -1,7 +1,23 @@
 const User = require('../Models/user')
 const joi = require('joi')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
+const path = require('path')
+const fs = require('fs')
+const nodemailer = require('nodemailer')
+const pug = require('pug')
+const crypto = require("crypto");
+
+smtpMailer = nodemailer.createTransport({
+    host: "smtp.mailtrap.io",
+    port: 2525,
+    auth: {
+        user: "36921a8e4b675c",
+        pass: "46c18a1531e221"
+    }
+});
+
+
 
 exports.login = (req , res)=>{
     data = req.body
@@ -103,4 +119,87 @@ exports.register = (req , res)=>{
     }
 
 
+}
+
+exports.forgetPassword = async (req , res)=>{
+    const email = req.body.email
+    const FilePath = path.join(__dirname, '../', 'public', 'static', 'mail', 'ForgetPassword.pug')   
+    const template = pug.compileFile(FilePath)
+
+    const restToken = crypto.randomBytes(20).toString('hex')
+    const resetlink = req.protocol + '://' + req.get('host') + '/auth/restpassword/' + restToken
+    const HtmlMail = template({ resetlink: resetlink});
+
+    User.findOne({email : email}).then((user)=>{
+        if(user.length != 0){
+            
+            user.resetToken = restToken
+            
+            user.save().then((success)=>{
+                
+                let mailOptions = {
+                    from: 'admin@gym-back-end.com',
+                    to: user.email,
+                    subject: 'Rest Password',
+                    html: HtmlMail
+                }
+
+                smtpMailer.sendMail(mailOptions , (err , response)=>{
+                    if(err){
+                        return res.status(404).json({
+                            status: false,
+                            message: 'Email Not Sent ',
+                        })
+                    }else {
+                        return res.json({
+                            status: true,
+                            message: 'Email Sent',
+                        })   
+                    }
+                })
+
+            }).catch((err)=>{
+                console.log(err);
+                
+            })
+            
+
+        }else {
+            return res.status(404).json({
+                status: false,
+                message: 'Email Not found ',
+            })
+        }
+        
+    }).catch((err)=>{
+
+        throw err 
+        
+    })
+        
+    
+    
+
+
+}
+
+
+exports.restPasswrod = (req, res) => {
+    res.render('home', { restlink : "hassan"})
+}
+
+exports.updatePassword = async (req, res) => {
+    id = req.params.id
+    password = bcrypt.hashSync(req.body.password ,10)
+    await User.findOne({ resetToken: id }).then((user)=>{        
+        user.password = password 
+        user.save().then((susscess)=>{
+            res.render('passwordUpdated')
+        }).catch((err) => {
+            res.status(404).render('404')
+        })
+    }).catch((err)=>{
+        res.status(404).render('404')
+    })
+    
 }

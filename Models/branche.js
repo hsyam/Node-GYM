@@ -20,4 +20,4 @@ let BrancheSchame = mongoose.Schema({
 
  
 
-module.exports = mongoose.model('branche' , BrancheSchame)
+module.exports = mongoose.model('Branche' , BrancheSchame)
