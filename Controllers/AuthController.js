@@ -7,6 +7,7 @@ const fs = require('fs')
 const nodemailer = require('nodemailer')
 const pug = require('pug')
 const crypto = require("crypto");
+const _ = require('lodash')
 
 smtpMailer = nodemailer.createTransport({
     host: "smtp.mailtrap.io",
@@ -75,7 +76,7 @@ exports.login = (req , res)=>{
     }
 }
 
-exports.register = (req , res)=>{
+exports.register = async(req , res , next)=>{
     
     data = req.body
     const schema = joi.object().keys({
@@ -91,28 +92,27 @@ exports.register = (req , res)=>{
 
     const validate = joi.validate(data , schema)
     if(validate.error){
-        res.json({
-            status: 'error',
-            message: 'Invalid request data',
-        })
+        validate.error.statusCode = 422
+        validate.error.message = "Invalid request data"
+        next(validate.error)
     }else {
-
- 
-
-        let newUser = new User()
-        newUser.name = data.name 
-        newUser.username = data.username 
-        newUser.email = data.email 
-        newUser.password = bcrypt.hashSync(data.password ,10) 
-        newUser.phone = data.phone 
-        newUser.department_id = data.department_id 
-        newUser.branch_id = data.branch_id 
-        newUser.role = data.role
+        let _user = await User.findOne({email: data.email})
+        if(_user){
+            res.status(422).json({
+                status: false ,  
+                message: "Email is already exists"
+            })
+            return
+        }
+        data.password = await bcrypt.hashSync(data.password ,10) 
+        let info = _.pick(data , ['name' , 'username' , 'email' , 'password' , 'phone' , 'department_id' , 'branch_id' , 'role'  ])
+        let newUser = new User(info)
         newUser.save().then(susscess=>{
             res.status(200).json({'status' : true , message :"User Created " , data : newUser}) 
         }).catch(err=>{
-            res.status(422).json({'status' : false , message :"Cant Create User"})
-
+            err.statusCode = 422
+            err.message = "cant Create user"
+            next(err)
         })
         
     
@@ -121,7 +121,7 @@ exports.register = (req , res)=>{
 
 }
 
-exports.forgetPassword = async (req , res)=>{
+exports.forgetPassword = async (req , res , next)=>{
     const email = req.body.email
     const FilePath = path.join(__dirname, '../', 'public', 'static', 'mail', 'ForgetPassword.pug')   
     const template = pug.compileFile(FilePath)
@@ -163,7 +163,6 @@ exports.forgetPassword = async (req , res)=>{
                 
             })
             
-
         }else {
             return res.status(404).json({
                 status: false,
@@ -173,13 +172,10 @@ exports.forgetPassword = async (req , res)=>{
         
     }).catch((err)=>{
 
-        throw err 
+        err.message = "email Not Found"
+        next(err)  
         
     })
-        
-    
-    
-
 
 }
 

@@ -53,7 +53,9 @@ exports.Create = (req , res)=>{
         Branche.save().then((success)=>{
             res.json({
                 status : true , 
-                data: Branche
+                data: Branche, 
+                data: success
+
             })
         }).catch((err)=>{
             res.status(500).json({

@@ -1,40 +1,30 @@
-const departmenteModel = require('./../Models/department')
+const ExpenseModel = require('./../Models/expense')
 const joi = require('joi')
-
-exports.getAll = (req ,res , next)=>{ 
-    departmenteModel.find({}).then((Department)=>{
+exports.getAll = async (req , res)=>{
+    let expenses = await ExpenseModel.find({}).then((data)=>{
         res.json({
-            status : true , 
-            data: Department
+            status : true ,
+            data : data
         })
     }).catch((err)=>{
         err.statusCode = 500 
         next(err)
     })
 }
-
-
-exports.getOne = (req ,res , next)=>{ 
-    let id = req.params.id  
-    
-    departmenteModel.findById(id).then((Department)=>{
-        
+exports.getOne = async (req , res,next)=>{
+    let id = req.params.id
+    let ecpenses = await ExpenseModel.findById(id).then((data)=>{
         res.json({
-            status : true , 
-            data: Department
+            status : true ,
+            data : data
         })
     }).catch((err)=>{
-        res.status(404).json({
-            status : false , 
-            message : "Not Found"
-        })
+        err.statusCode = 500 
+        next(err)
     })
 }
-
-
-exports.Create = (req , res)=>{
-
-    const data = req.body
+exports.Create = async (req , res ,next)=>{
+    const data = req.body 
     const schema = joi.object().keys({
         name : joi.string().required(),
     })
@@ -45,24 +35,20 @@ exports.Create = (req , res)=>{
             message: 'Invalid request data',
         })
     }else {
-        const Department = new departmenteModel()
-        Department.name = data.name 
-        Department.save().then((success)=>{
+        let MyExpense = await new ExpenseModel(data)
+        MyExpense.save().then((data)=>{
             res.json({
-                status : true , 
-                data: Department
+                status: true , 
+                message: "Expense Add successfully",
+                data: data
             })
         }).catch((err)=>{
-            res.status(500).json({
-                status : false , 
-                message: "cant Create"
-            })
+            next(err)
         })
+        
     }
-
 }
-
-exports.update = (req, res)=>{
+exports.update = async (req , res,next)=>{
     let id = req.params.id 
     let data = req.body
     const schema = joi.object().keys({
@@ -75,12 +61,12 @@ exports.update = (req, res)=>{
             message: 'Invalid request data',
         })
     }else {
-        departmenteModel.findById(id).then((Department)=>{
-            Department.name = data.name 
-            Department.save().then((success)=>{
+        await ExpenseModel.findById(id).then((expense)=>{
+            expense.name = data.name
+            expense.save().then((success)=>{
                 res.json({
                     status: true,
-                    message: "Updated Success",
+                    message: "Updated Success", 
                     data: success
                 })
             }).catch((err)=>{
@@ -97,13 +83,18 @@ exports.update = (req, res)=>{
         })
     }
 }
-
-exports.delete = (req , res)=>{
+exports.delete = async (req , res)=>{
     let id = req.params.id 
-    departmenteModel.findByIdAndDelete(id).then((result)=>{
-        res.json({
-            status: true,
-            message: "Sussess Deleted"
+    ExpenseModel.findByIdAndDelete(id).then((result)=>{
+        if(result){
+            res.json({
+                status: true,
+                message: "Sussess Deleted"
+            })
+        }
+        res.status(404).json({
+            status: false,
+            message: "Entity Not Found"
         })
     }).catch((err)=>{
         res.status(500).json({

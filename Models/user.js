@@ -41,9 +41,8 @@ let UsersSchame = mongoose.Schema({
     resetToken: {
         type: String,
     }, 
-    created_at: {type: Date, default: Date.now},
-    updated_at: {type: Date, default: Date.now}
-})
+    
+}, {timestamps: true})
 
  
 UsersSchame.methods.toJSON = function(){

@@ -34,17 +34,29 @@ app.use((req, res, next) => {
     next()
 })
 
+
   
 // Routes
 let Auth = require('./routes/Auth');
 let Branches = require('./routes/branches');
 let Deprartment = require('./routes/Deprartment');
+let expenses = require('./routes/expenses');
 
 // Use Routes
 app.use('/auth' , Auth)
 app.use('/branches', Branches)
 app.use('/departments', Deprartment)
+app.use('/expenses', expenses)
 
+app.use((error, req, res, next) => {
+    const status = error.statusCode || 500
+    const message = error.message
+    const data = error.data
+    res.status(status).json({
+      message: message,
+      data: data
+    })
+  })
 
 const server = http.createServer(app)
 server.listen(port , ()=>{

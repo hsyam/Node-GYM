@@ -14,9 +14,8 @@ let BrancheSchame = mongoose.Schema({
         type : String , 
         require : true 
     },
-    created_at: {type: Date, default: Date.now},
-    updated_at: {type: Date, default: Date.now}
-})
+ 
+}, {timestamps: true})
 
  
 
