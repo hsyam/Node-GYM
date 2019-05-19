@@ -28,8 +28,15 @@ module.exports = (req , res , next)=>{
         }
         
             let user = User.findById(decoded.id).then((res)=>{
-            req.user = res
-            next()
+                if(res == null){
+                    return res.status(statusCode).json({
+                        status : false , 
+                        message : "Invalid Token"
+                    })
+                }else {
+                    req.user = res
+                    next()
+                }
         }).catch((err)=>{
             return  res.status(statusCode).json(Invalid)
         })

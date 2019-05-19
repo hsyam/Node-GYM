@@ -41,12 +41,16 @@ let Auth = require('./routes/Auth');
 let Branches = require('./routes/branches');
 let Deprartment = require('./routes/Deprartment');
 let expenses = require('./routes/expenses');
+let payment = require('./routes/payment');
+let expenses_data = require('./routes/expenses-data');
 
 // Use Routes
 app.use('/auth' , Auth)
 app.use('/branches', Branches)
 app.use('/departments', Deprartment)
 app.use('/expenses', expenses)
+app.use('/payment-type', payment)
+app.use('/expenses-data', expenses_data)
 
 app.use((error, req, res, next) => {
     const status = error.statusCode || 500
