@@ -43,6 +43,7 @@ let Deprartment = require('./routes/Deprartment');
 let expenses = require('./routes/expenses');
 let payment = require('./routes/payment');
 let expenses_data = require('./routes/expenses-data');
+let body_type = require('./routes/body-type');
 
 // Use Routes
 app.use('/auth' , Auth)
@@ -51,6 +52,7 @@ app.use('/departments', Deprartment)
 app.use('/expenses', expenses)
 app.use('/payment-type', payment)
 app.use('/expenses-data', expenses_data)
+app.use('/body-type', body_type)
 
 app.use((error, req, res, next) => {
     const status = error.statusCode || 500
