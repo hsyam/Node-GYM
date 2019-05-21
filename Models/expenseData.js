@@ -25,6 +25,6 @@ let expensesDataSchame = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'user'
     },
-})
+},{timestamps:true})
 
 module.exports = mongoose.model('expense_data' , expensesDataSchame)
