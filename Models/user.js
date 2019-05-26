@@ -3,31 +3,34 @@ const mongoose = require('mongoose')
 let UsersSchame = mongoose.Schema({
     name : {
         type : String , 
-        require : true 
+        required : true 
     }, 
     username : {
         type : String , 
-        require : true 
+        required : true 
     }, 
     email : {
         type : String , 
-        require : true 
+        required : true,
+        unique: true
     }, 
     password : {
         type : String , 
-        require : true 
+        required : true 
     }, 
     phone : {
         type : String , 
-        require : true 
+        required : true,
+        unique: true
     }, 
     address : {
         type : String , 
-        require : true 
+        required : true 
     }, 
     department_id : {
         type : mongoose.Schema.Types.ObjectId , 
-        ref: 'department'
+        ref: 'department',
+        required : true 
     }, 
     branch_id : {
         type : mongoose.Schema.Types.ObjectId , 
@@ -36,7 +39,7 @@ let UsersSchame = mongoose.Schema({
     },
     role: {
         type: String,
-        require: true
+        required: true
     },
     resetToken: {
         type: String,

@@ -4,15 +4,15 @@ const mongoose = require('mongoose')
 let BrancheSchame = mongoose.Schema({
     name : {
         type : String , 
-        require : true 
+        required : true 
     },
     phone : {
         type : String , 
-        require : true 
+        required : true 
     },
     address : {
         type : String , 
-        require : true 
+        required : true 
     },
  
 }, {timestamps: true})

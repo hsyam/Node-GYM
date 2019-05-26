@@ -8,8 +8,9 @@ const loger = require('morgan')
 const port = 3000
 
 const app = new express() 
-
-mongoose.connect("mongodb://localhost:27017/gym" , { useNewUrlParser: true })
+const dbURI = "mongodb://localhost:27017/gym";
+mongoose.connect(dbURI , { useNewUrlParser: true })
+mongoose.set('useCreateIndex', true)
 require('./Models/branche')
 require('./Models/department')
 let db = mongoose.connection
@@ -17,9 +18,6 @@ let db = mongoose.connection
 db.once('open', ()=> {
    console.log('database connected')
 });
-
-
- 
 
 app.set('view engine', 'pug')
 
@@ -33,13 +31,11 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     next()
 })
-
-
   
 // Routes
 let Auth = require('./routes/Auth');
 let Branches = require('./routes/branches');
-let Deprartment = require('./routes/Deprartment');
+let Deprartment = require('./routes/deprartment');
 let expenses = require('./routes/expenses');
 let payment = require('./routes/payment');
 let expenses_data = require('./routes/expenses-data');

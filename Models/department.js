@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 let DeparmentSchame = mongoose.Schema({
     name : {
         type : String , 
-        require : true 
+        required : true 
     },
     
 }, {timestamps: true})

@@ -5,21 +5,21 @@ let expensesDataSchame = mongoose.Schema({
     expense_id :{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'exprense', 
-        require: true
+        required: true
     },
     cost :{
         type: String, 
-        require: true
+        required: true
     },
     branch_id :{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Branche', 
-        require: true
+        required: true
         
     },
     date :{
         type: Date, 
-        require: true
+        required: true
     },
     user_id :{
         type: mongoose.Schema.Types.ObjectId, 
