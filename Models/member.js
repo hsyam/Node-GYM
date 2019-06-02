@@ -36,5 +36,11 @@ const schema = mongoose.Schema({
         type: String,
     }, 
 })
+schema.methods.toJSON = function(){
+    let obj = this.toObject() 
+    delete obj.password 
+    delete obj.resetToken 
+    return obj
+}
 
 module.exports = mongoose.model('member',schema)

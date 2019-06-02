@@ -40,6 +40,7 @@ let expenses = require('./routes/expenses');
 let payment = require('./routes/payment');
 let expenses_data = require('./routes/expenses-data');
 let body_type = require('./routes/body-type');
+let members = require('./routes/member');
 
 // Use Routes
 app.use('/auth' , Auth)
@@ -49,16 +50,19 @@ app.use('/expenses', expenses)
 app.use('/payment-type', payment)
 app.use('/expenses-data', expenses_data)
 app.use('/body-type', body_type)
+app.use('/members', members)
 
 app.use((error, req, res, next) => {
     const status = error.statusCode || 500
     const message = error.message
     const data = error.data
     res.status(status).json({
+      status:false,
       message: message,
       data: data
     })
   })
+
 
 const server = http.createServer(app)
 server.listen(port , ()=>{

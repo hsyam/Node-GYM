@@ -17,9 +17,9 @@ exports.getAll = async (req, res , next)=>{
 exports.create = async (req, res, next)=>{
     const data = req.body
     const schema = joi.object().keys({
-        expense_id : joi.required(),
+        expense : joi.required(),
         cost : joi.required(),
-        branch_id : joi.required(),
+        branch : joi.required(),
         date : joi.date().required(),
     })
     const validate = joi.validate(data , schema)
@@ -29,7 +29,7 @@ exports.create = async (req, res, next)=>{
             message: 'Invalid request data',
         })
     }else {
-        let body = _.pick(data , ['expense_id' , 'cost' , 'branch_id' , 'date'])
+        let body = _.pick(data , ['expense' , 'cost' , 'branch' , 'date'])
         body.user_id = req.user._id
         let expenseData = new _Model(body)
         await expenseData.save().then((data)=>{
@@ -74,9 +74,9 @@ exports.update = async (req,res,next)=>{
     let id = req.params.id
     const data = req.body
     const schema = joi.object().keys({
-        expense_id : joi.required(),
+        expense : joi.required(),
         cost : joi.required(),
-        branch_id : joi.required(),
+        branch : joi.required(),
         date : joi.date().required(),
     })
     const validate = joi.validate(data , schema)

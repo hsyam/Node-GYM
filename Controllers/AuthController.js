@@ -85,8 +85,8 @@ exports.register = async(req , res , next)=>{
         email : joi.string().email().required(),
         password : joi.required(),
         phone : joi.required(),
-        department_id : joi.required(),
-        branch_id : joi.required(),
+        department : joi.required(),
+        branch : joi.required(),
         role : joi.required(),
     })
 
@@ -105,7 +105,7 @@ exports.register = async(req , res , next)=>{
             return
         }
         data.password = await bcrypt.hashSync(data.password ,10) 
-        let info = _.pick(data , ['name' , 'username' , 'email' , 'password' , 'phone' , 'department_id' , 'branch_id' , 'role'  ])
+        let info = _.pick(data , ['name' , 'username' , 'email' , 'password' , 'phone' , 'department' , 'branch' , 'role'  ])
         let newUser = new User(info)
         newUser.save().then(susscess=>{
             res.status(200).json({'status' : true , message :"User Created " , data : newUser}) 

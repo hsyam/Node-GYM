@@ -27,12 +27,12 @@ let UsersSchame = mongoose.Schema({
         type : String , 
         required : true 
     }, 
-    department_id : {
+    department : {
         type : mongoose.Schema.Types.ObjectId , 
         ref: 'department',
         required : true 
     }, 
-    branch_id : {
+    branch : {
         type : mongoose.Schema.Types.ObjectId , 
         ref: 'branche',
         required: true

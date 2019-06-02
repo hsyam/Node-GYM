@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 
 let expensesDataSchame = mongoose.Schema({
-    expense_id :{
+    expense :{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'exprense', 
         required: true
@@ -11,7 +11,7 @@ let expensesDataSchame = mongoose.Schema({
         type: String, 
         required: true
     },
-    branch_id :{
+    branch :{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Branche', 
         required: true
